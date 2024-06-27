@@ -2,7 +2,7 @@
 
 namespace FamilyTree.Interfaces;
 
-public interface IFamilyMemberService
+public interface IFamilyTreeService
 {
     Task CreateNewMemberAsync(NewFamilyMemberCmd cmd);
     

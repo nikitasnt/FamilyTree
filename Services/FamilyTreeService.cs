@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FamilyTree.Services;
 
-public class FamilyMemberService(FamilyTreeDbContext context) : IFamilyMemberService
+public class FamilyTreeService(FamilyTreeDbContext context) : IFamilyTreeService
 {
     private async Task SaveNewFamilyMember(NewFamilyMemberCmd cmd, int? parentId = null)
     {
