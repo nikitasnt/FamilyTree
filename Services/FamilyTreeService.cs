@@ -19,7 +19,7 @@ public class FamilyTreeService(FamilyTreeDbContext context) : IFamilyTreeService
             Firstname = cmd.Firstname,
             Lastname = cmd.Lastname,
             Birthday = cmd.Birthday,
-            HierarchyPath = new LTree() // Currently empty.
+            HierarchyPath = new LTree(string.Empty) // Currently empty.
         };
         await context.AddAsync(newFamilyMember);
         await context.SaveChangesAsync();

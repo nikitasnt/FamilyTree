@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FamilyTree.Database;
 
-public class FamilyTreeDbContext : DbContext
+public class FamilyTreeDbContext(DbContextOptions options) : DbContext(options)
 {
     public DbSet<FamilyMember> FamilyMembers { get; set; }
 
