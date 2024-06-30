@@ -10,4 +10,6 @@ public interface IFamilyTreeService
     Task CreateNewMemberAsync(NewFamilyMemberCmd cmd, int parentId);
 
     IAsyncEnumerable<FamilyMemberInfo> GetAllMembers();
+    
+    
 }

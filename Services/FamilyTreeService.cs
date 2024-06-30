@@ -58,6 +58,7 @@ public class FamilyTreeService(FamilyTreeDbContext context) : IFamilyTreeService
     {
         return allMembers.Values.Where(m => m.ParentId == parentMember.Id).Select(member => new FamilyMemberInfo
         {
+            Id = member.Id,
             Firstname = member.Firstname,
             Lastname = member.Lastname,
             Birthday = member.Birthday,
@@ -87,6 +88,7 @@ public class FamilyTreeService(FamilyTreeDbContext context) : IFamilyTreeService
         {
             yield return new FamilyMemberInfo
             {
+                Id = topMember.Id,
                 Firstname = topMember.Firstname,
                 Lastname = topMember.Lastname,
                 Birthday = topMember.Birthday,
