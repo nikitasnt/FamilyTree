@@ -1,5 +1,5 @@
-﻿using FamilyTree.Interfaces;
-using FamilyTree.Models;
+﻿using FamilyTree.Filters;
+using FamilyTree.Interfaces;
 using FamilyTree.Models.Commands;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +7,7 @@ namespace FamilyTree.Controllers;
 
 [ApiController]
 [Route("[controller]/members")]
+[BadHttpRequestExceptionFilter]
 public class FamilyTreeController(IFamilyTreeService service) : ControllerBase
 {
     [HttpPost("without-parent")]

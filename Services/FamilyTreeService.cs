@@ -11,6 +11,11 @@ public class FamilyTreeService(FamilyTreeDbContext context) : IFamilyTreeService
 {
     private async Task SaveNewFamilyMember(NewFamilyMemberCmd cmd, FamilyMember? parent = null)
     {
+        if (parent != null && cmd.Birthday <= parent.Birthday)
+        {
+            throw new BadHttpRequestException("A child can only be born after its parent has been born.", 400);
+        }
+        
         // Using a transaction because you want to perform inserts and updates atomically.
         await using var tr = await context.Database.BeginTransactionAsync();
         
@@ -47,7 +52,7 @@ public class FamilyTreeService(FamilyTreeDbContext context) : IFamilyTreeService
 
         if (parentFamilyMember == null)
         {
-            throw new BadHttpRequestException($"No family member with ID {parentId} for using as parent.");
+            throw new BadHttpRequestException($"No family member with ID {parentId} for using as parent.", 404);
         }
 
         await SaveNewFamilyMember(cmd, parentFamilyMember);

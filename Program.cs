@@ -8,12 +8,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options => options.UseDateOnlyTimeOnlyStringConverters());// Normal date only format in
+                                                                                         // Swagger.
 // Database.
 builder.Services.AddDbContext<FamilyTreeDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 // Family tree service.
 builder.Services.AddScoped<IFamilyTreeService, FamilyTreeService>();
 
