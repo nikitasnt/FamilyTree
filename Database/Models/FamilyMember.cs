@@ -23,8 +23,20 @@ public class FamilyMember
     public DateOnly Birthday { get; set; }
     
     /// <summary>
-    /// LTree by IDs.
+    /// LTree by IDs. Operations allowed only for not materialized entity.
     /// </summary>
     [Required]
     public LTree HierarchyPath { get; set; }
+    
+    /// <summary>
+    /// <see cref="LTree.NLevel"/> from <see cref="HierarchyPath"/>.
+    /// </summary>
+    [NotMapped]
+    public int HierarchyLevel { get; set; }
+    
+    /// <summary>
+    /// Parent ID using <see cref="HierarchyPath"/>.
+    /// </summary>
+    [NotMapped]
+    public int? ParentId { get; set; }
 }

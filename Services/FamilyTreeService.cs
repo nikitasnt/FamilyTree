@@ -1,6 +1,7 @@
 ﻿using FamilyTree.Database;
 using FamilyTree.Database.Models;
 using FamilyTree.Interfaces;
+using FamilyTree.Models;
 using FamilyTree.Models.Commands;
 using Microsoft.EntityFrameworkCore;
 
@@ -50,5 +51,47 @@ public class FamilyTreeService(FamilyTreeDbContext context) : IFamilyTreeService
         }
 
         await SaveNewFamilyMember(cmd, parentFamilyMember.Id);
+    }
+
+    private static IEnumerable<FamilyMemberInfo> GetChildren(FamilyMember parentMember,
+        IReadOnlyDictionary<int, FamilyMember> allMembers)
+    {
+        return allMembers.Values.Where(m => m.ParentId == parentMember.Id).Select(member => new FamilyMemberInfo
+        {
+            Firstname = member.Firstname,
+            Lastname = member.Lastname,
+            Birthday = member.Birthday,
+            DirectChildren = GetChildren(member, allMembers)
+        });
+    }
+
+    public async IAsyncEnumerable<FamilyMemberInfo> GetAllMembers()
+    {
+        var allMembers = await context.FamilyMembers
+            .Select(m => new FamilyMember
+            {
+                Id = m.Id,
+                Firstname = m.Firstname,
+                Lastname = m.Lastname,
+                Birthday = m.Birthday,
+                HierarchyPath = m.HierarchyPath,
+                HierarchyLevel = m.HierarchyPath.NLevel,
+                ParentId = m.HierarchyPath.NLevel == 1
+                    ? null
+                    : int.Parse(m.HierarchyPath.Subpath(m.HierarchyPath.NLevel - 2, 1))
+            })
+            .ToDictionaryAsync(m => m.Id);
+        
+        // Обход самый первых (верхних) родителей.
+        foreach (var topMember in allMembers.Values.Where(m => m.HierarchyLevel == 1))
+        {
+            yield return new FamilyMemberInfo
+            {
+                Firstname = topMember.Firstname,
+                Lastname = topMember.Lastname,
+                Birthday = topMember.Birthday,
+                DirectChildren = GetChildren(topMember, allMembers)
+            };
+        }
     }
 }
