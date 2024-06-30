@@ -65,8 +65,21 @@ public class FamilyTreeService(FamilyTreeDbContext context) : IFamilyTreeService
             DirectChildren = GetChildren(member, allMembers)
         });
     }
+    
+    private static IEnumerable<FamilyMemberWithChildrenInfo> ConvertAllMembers(IReadOnlyList<FamilyMember> allMembers)
+    {
+        // Bypass the highest parents.
+        return allMembers.Where(m => m.HierarchyLevel == 1).Select(topMember => new FamilyMemberWithChildrenInfo
+        {
+            Id = topMember.Id,
+            Firstname = topMember.Firstname,
+            Lastname = topMember.Lastname,
+            Birthday = topMember.Birthday,
+            DirectChildren = GetChildren(topMember, allMembers)
+        });
+    }
 
-    public async IAsyncEnumerable<FamilyMemberWithChildrenInfo> GetAllMembers()
+    public async Task<IEnumerable<FamilyMemberWithChildrenInfo>> GetAllMembers()
     {
         var allMembers = await context.FamilyMembers
             .AsNoTracking()
@@ -84,18 +97,7 @@ public class FamilyTreeService(FamilyTreeDbContext context) : IFamilyTreeService
             })
             .ToListAsync();
         
-        // Bypassing the very first (top) parents.
-        foreach (var topMember in allMembers.Where(m => m.HierarchyLevel == 1))
-        {
-            yield return new FamilyMemberWithChildrenInfo
-            {
-                Id = topMember.Id,
-                Firstname = topMember.Firstname,
-                Lastname = topMember.Lastname,
-                Birthday = topMember.Birthday,
-                DirectChildren = GetChildren(topMember, allMembers)
-            };
-        }
+        return ConvertAllMembers(allMembers);
     }
 
     public async Task<FamilyMemberInfo?> GetGreatGrandfather(int greatGrandsonId)

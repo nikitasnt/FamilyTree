@@ -25,12 +25,10 @@ public class FamilyTreeController(IFamilyTreeService service) : ControllerBase
     }
 
     [HttpGet("")]
-    public async IAsyncEnumerable<FamilyMemberWithChildrenInfo> GetAll()
+    public async Task<IActionResult> GetAll()
     {
-        await foreach (var member in service.GetAllMembers())
-        {
-            yield return member;
-        }
+        var result = await service.GetAllMembers();
+        return Ok(result);
     }
 
     [HttpGet("great-grandfather-for/{greatGrandsonId:int}")]
