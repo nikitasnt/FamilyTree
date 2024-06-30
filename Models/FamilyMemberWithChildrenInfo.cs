@@ -1,6 +1,6 @@
 ﻿namespace FamilyTree.Models;
 
-public class FamilyMemberInfo
+public class FamilyMemberWithChildrenInfo
 {
     public int Id { get; set; }
     
@@ -9,4 +9,6 @@ public class FamilyMemberInfo
     public string Lastname { get; set; } = null!;
 
     public DateOnly Birthday { get; set; }
+    
+    public IEnumerable<FamilyMemberWithChildrenInfo> DirectChildren { get; set; } = null!;
 }

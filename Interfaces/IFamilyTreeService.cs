@@ -9,7 +9,9 @@ public interface IFamilyTreeService
     
     Task CreateNewMemberAsync(NewFamilyMemberCmd cmd, int parentId);
 
-    IAsyncEnumerable<FamilyMemberInfo> GetAllMembers();
+    IAsyncEnumerable<FamilyMemberWithChildrenInfo> GetAllMembers();
+
+    Task<FamilyMemberInfo?> GetGreatGrandfather(int greatGrandsonId);
     
-    
+    Task<FamilyMemberInfo?> GetGrandfather(int grandsonId);
 }
