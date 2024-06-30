@@ -103,10 +103,10 @@ public class FamilyTreeService(FamilyTreeDbContext context) : IFamilyTreeService
     public async Task<FamilyMemberInfo?> GetGreatGrandfather(int greatGrandsonId)
     {
         return await context.FamilyMembers
-            .AsNoTracking()
             .Where(m => m.HierarchyPath ==
-                        // ReSharper disable once EntityFramework.UnsupportedServerSideFunctionCall
-                        context.FamilyMembers.Single(m1 => m1.Id == greatGrandsonId).HierarchyPath.Subpath(0, -3))
+                        context.FamilyMembers.Single(m1 => m1.Id == greatGrandsonId && m1.HierarchyPath.NLevel > 3)
+                            // ReSharper disable once EntityFramework.UnsupportedServerSideFunctionCall
+                            .HierarchyPath.Subpath(0, -3))
             .Select(m => new FamilyMemberInfo
             {
                 Id = m.Id,
@@ -122,8 +122,9 @@ public class FamilyTreeService(FamilyTreeDbContext context) : IFamilyTreeService
         return await context.FamilyMembers
             .AsNoTracking()
             .Where(m => m.HierarchyPath ==
-                        // ReSharper disable once EntityFramework.UnsupportedServerSideFunctionCall
-                        context.FamilyMembers.Single(m1 => m1.Id == grandsonId).HierarchyPath.Subpath(0, -2))
+                        context.FamilyMembers.Single(m1 => m1.Id == grandsonId && m1.HierarchyPath.NLevel > 2)
+                            // ReSharper disable once EntityFramework.UnsupportedServerSideFunctionCall
+                            .HierarchyPath.Subpath(0, -2))
             .Select(m => new FamilyMemberInfo
             {
                 Id = m.Id,
@@ -132,5 +133,22 @@ public class FamilyTreeService(FamilyTreeDbContext context) : IFamilyTreeService
                 Birthday = m.Birthday
             })
             .SingleOrDefaultAsync();
+    }
+
+    public async Task<IEnumerable<FamilyMemberInfo>> GetGreatGrandsons(int greatGrandfatherId)
+    {
+        return await context.FamilyMembers
+            .AsNoTracking()
+            // ReSharper disable once EntityFramework.UnsupportedServerSideFunctionCall
+            .Where(m => m.HierarchyPath.NLevel > 3 && m.HierarchyPath.Subpath(0, -3) ==
+                context.FamilyMembers.Single(m1 => m1.Id == greatGrandfatherId).HierarchyPath)
+            .Select(m => new FamilyMemberInfo
+            {
+                Id = m.Id,
+                Firstname = m.Firstname,
+                Lastname = m.Lastname,
+                Birthday = m.Birthday
+            })
+            .ToListAsync();
     }
 }

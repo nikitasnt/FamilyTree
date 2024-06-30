@@ -14,4 +14,6 @@ public interface IFamilyTreeService
     Task<FamilyMemberInfo?> GetGreatGrandfather(int greatGrandsonId);
     
     Task<FamilyMemberInfo?> GetGrandfather(int grandsonId);
+
+    Task<IEnumerable<FamilyMemberInfo>> GetGreatGrandsons(int greatGrandfatherId);
 }

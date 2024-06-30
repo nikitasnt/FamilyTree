@@ -56,4 +56,11 @@ public class FamilyTreeController(IFamilyTreeService service) : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpGet("great-grandsons-for/{greatGrandfatherId:int}")]
+    public async Task<IActionResult> GetGreatGrandsons([FromRoute] int greatGrandfatherId)
+    {
+        var result = await service.GetGreatGrandsons(greatGrandfatherId);
+        return Ok(result);
+    }
 }
