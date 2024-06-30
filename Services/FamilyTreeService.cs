@@ -54,9 +54,9 @@ public class FamilyTreeService(FamilyTreeDbContext context) : IFamilyTreeService
     }
 
     private static IEnumerable<FamilyMemberWithChildrenInfo> GetChildren(FamilyMember parentMember,
-        IReadOnlyDictionary<int, FamilyMember> allMembers)
+        IReadOnlyList<FamilyMember> allMembers)
     {
-        return allMembers.Values.Where(m => m.ParentId == parentMember.Id).Select(member => new FamilyMemberWithChildrenInfo
+        return allMembers.Where(m => m.ParentId == parentMember.Id).Select(member => new FamilyMemberWithChildrenInfo
         {
             Id = member.Id,
             Firstname = member.Firstname,
@@ -69,6 +69,7 @@ public class FamilyTreeService(FamilyTreeDbContext context) : IFamilyTreeService
     public async IAsyncEnumerable<FamilyMemberWithChildrenInfo> GetAllMembers()
     {
         var allMembers = await context.FamilyMembers
+            .AsNoTracking()
             .Select(m => new FamilyMember
             {
                 Id = m.Id,
@@ -81,10 +82,10 @@ public class FamilyTreeService(FamilyTreeDbContext context) : IFamilyTreeService
                     ? null
                     : int.Parse(m.HierarchyPath.Subpath(m.HierarchyPath.NLevel - 2, 1))
             })
-            .ToDictionaryAsync(m => m.Id);
+            .ToListAsync();
         
-        // Обход самый первых (верхних) родителей.
-        foreach (var topMember in allMembers.Values.Where(m => m.HierarchyLevel == 1))
+        // Bypassing the very first (top) parents.
+        foreach (var topMember in allMembers.Where(m => m.HierarchyLevel == 1))
         {
             yield return new FamilyMemberWithChildrenInfo
             {
@@ -100,34 +101,34 @@ public class FamilyTreeService(FamilyTreeDbContext context) : IFamilyTreeService
     public async Task<FamilyMemberInfo?> GetGreatGrandfather(int greatGrandsonId)
     {
         return await context.FamilyMembers
+            .AsNoTracking()
             .Where(m => m.HierarchyPath ==
                         // ReSharper disable once EntityFramework.UnsupportedServerSideFunctionCall
                         context.FamilyMembers.Single(m1 => m1.Id == greatGrandsonId).HierarchyPath.Subpath(0, -3))
             .Select(m => new FamilyMemberInfo
-                {
-                    Id = m.Id,
-                    Firstname = m.Firstname,
-                    Lastname = m.Lastname,
-                    Birthday = m.Birthday
-                }
-            )
+            {
+                Id = m.Id,
+                Firstname = m.Firstname,
+                Lastname = m.Lastname,
+                Birthday = m.Birthday
+            })
             .SingleOrDefaultAsync();
     }
 
     public async Task<FamilyMemberInfo?> GetGrandfather(int grandsonId)
     {
         return await context.FamilyMembers
+            .AsNoTracking()
             .Where(m => m.HierarchyPath ==
                         // ReSharper disable once EntityFramework.UnsupportedServerSideFunctionCall
                         context.FamilyMembers.Single(m1 => m1.Id == grandsonId).HierarchyPath.Subpath(0, -2))
             .Select(m => new FamilyMemberInfo
-                {
-                    Id = m.Id,
-                    Firstname = m.Firstname,
-                    Lastname = m.Lastname,
-                    Birthday = m.Birthday
-                }
-            )
+            {
+                Id = m.Id,
+                Firstname = m.Firstname,
+                Lastname = m.Lastname,
+                Birthday = m.Birthday
+            })
             .SingleOrDefaultAsync();
     }
 }
