@@ -14,9 +14,11 @@
       - family-tree-network
     volumes:
       - db:/var/lib/postgresql/data
-#    environment:
-#      - POSTGRES_USER=postgres
-#      - POSTGRES_PASSWORD=postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    expose:
+      - "5432"
 networks:
   family-tree-network:
 volumes:
