@@ -9,7 +9,7 @@ namespace FamilyTree.Services;
 
 public class FamilyTreeService(FamilyTreeDbContext context) : IFamilyTreeService
 {
-    private async Task SaveNewFamilyMember(NewFamilyMemberCmd cmd, int? parentId = null)
+    private async Task SaveNewFamilyMember(NewFamilyMemberCmd cmd, FamilyMember? parent = null)
     {
         // Using a transaction because you want to perform inserts and updates atomically.
         await using var tr = await context.Database.BeginTransactionAsync();
@@ -25,9 +25,9 @@ public class FamilyTreeService(FamilyTreeDbContext context) : IFamilyTreeService
         await context.AddAsync(newFamilyMember);
         await context.SaveChangesAsync();
         
-        // Setting the correct value with generated ID by DB. TODO: Fix!
+        // Setting the correct value with generated ID by DB.
         newFamilyMember.HierarchyPath =
-            new LTree(parentId.HasValue ? $"{parentId}.{newFamilyMember.Id}" : newFamilyMember.Id.ToString());
+            new LTree(parent != null ? $"{parent.HierarchyPath}.{newFamilyMember.Id}" : newFamilyMember.Id.ToString());
 
         // Update the new entity with the correct HierarchyPath value.
         context.Update(newFamilyMember);
@@ -50,7 +50,7 @@ public class FamilyTreeService(FamilyTreeDbContext context) : IFamilyTreeService
             throw new BadHttpRequestException($"No family member with ID {parentId} for using as parent.");
         }
 
-        await SaveNewFamilyMember(cmd, parentFamilyMember.Id);
+        await SaveNewFamilyMember(cmd, parentFamilyMember);
     }
 
     private static IEnumerable<FamilyMemberWithChildrenInfo> GetChildren(FamilyMember parentMember,
