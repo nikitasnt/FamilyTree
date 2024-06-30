@@ -19,6 +19,13 @@ builder.Services.AddScoped<IFamilyTreeService, FamilyTreeService>();
 
 var app = builder.Build();
 
+// Applying database migrations.
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<FamilyTreeDbContext>();
+    db.Database.Migrate();
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

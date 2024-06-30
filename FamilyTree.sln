@@ -2,6 +2,11 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyTree", "FamilyTree.csproj", "{6FABC3CB-26A2-49ED-9A0B-3F9E49A74088}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EA0C1CB9-CBD9-45A6-9D9E-1180FDB16E57}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +17,7 @@ Global
 		{6FABC3CB-26A2-49ED-9A0B-3F9E49A74088}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6FABC3CB-26A2-49ED-9A0B-3F9E49A74088}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6FABC3CB-26A2-49ED-9A0B-3F9E49A74088}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
 EndGlobal

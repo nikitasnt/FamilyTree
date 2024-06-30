@@ -1,0 +1,23 @@
+﻿services:
+  familytree:
+    image: familytree
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - family-tree-network
+    ports:
+      - 8080:8080
+  database:
+    image: postgres:latest
+    networks:
+      - family-tree-network
+    volumes:
+      - db:/var/lib/postgresql/data
+#    environment:
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_PASSWORD=postgres
+networks:
+  family-tree-network:
+volumes:
+  db:
