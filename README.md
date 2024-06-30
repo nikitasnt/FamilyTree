@@ -9,7 +9,7 @@ And then command:
 ```cmd
 docker-compose -f docker-compose.yml up -d
 ```
-Go to http://localhost:8080/swagger/index.html. Note: If the page is not accessible, try stopping the created Docker container and running the second command again.
+Go to http://localhost:8080/swagger/index.html to check API. Note: If the page is not accessible, try stopping the created Docker container and running the second command again.
 ### In IDE
 In appsettings.json file change the DefaultConnection value to your Postgres server's connection string.
 ```json
