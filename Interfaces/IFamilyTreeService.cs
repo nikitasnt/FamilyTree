@@ -5,15 +5,39 @@ namespace FamilyTree.Interfaces;
 
 public interface IFamilyTreeService
 {
+    /// <summary>
+    /// Create a new family member without a parent.
+    /// </summary>
+    /// <param name="cmd">Family member information.</param>
     Task CreateNewMemberAsync(NewFamilyMemberCmd cmd);
-    
+
+    /// <summary>
+    /// Create a new family member with a parent.
+    /// </summary>
+    /// <param name="cmd">Family member information.</param>
+    /// <param name="parentId">Parent ID.</param>
     Task CreateNewMemberAsync(NewFamilyMemberCmd cmd, int parentId);
 
-    Task<IEnumerable<FamilyMemberWithChildrenInfo>> GetAllMembers();
+    /// <summary>
+    /// Get all the people in the form of trees.
+    /// </summary>
+    Task<IEnumerable<FamilyMemberWithChildrenInfo>> GetAllMembersAsync();
 
-    Task<FamilyMemberInfo?> GetGreatGrandfather(int greatGrandsonId);
+    /// <summary>
+    /// Get great-grandfather by person ID.
+    /// </summary>
+    /// <param name="greatGrandsonId">Person ID (great-grandson).</param>
+    Task<FamilyMemberInfo?> GetGreatGrandfatherAsync(int greatGrandsonId);
     
-    Task<FamilyMemberInfo?> GetGrandfather(int grandsonId);
+    /// <summary>
+    /// Get grandfather by person ID.
+    /// </summary>
+    /// <param name="grandsonId">Person ID (grandson).</param>
+    Task<FamilyMemberInfo?> GetGrandfatherAsync(int grandsonId);
 
-    Task<IEnumerable<FamilyMemberInfo>> GetGreatGrandsons(int greatGrandfatherId);
+    /// <summary>
+    /// Get great-grandsons by person ID.
+    /// </summary>
+    /// <param name="greatGrandfatherId">Person ID (great-grandfather).</param>
+    Task<IEnumerable<FamilyMemberInfo>> GetGreatGrandsonsAsync(int greatGrandfatherId);
 }

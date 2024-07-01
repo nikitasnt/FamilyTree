@@ -28,14 +28,14 @@ public class FamilyTreeController(IFamilyTreeService service) : ControllerBase
     [HttpGet("")]
     public async Task<IActionResult> GetAll()
     {
-        var result = await service.GetAllMembers();
+        var result = await service.GetAllMembersAsync();
         return Ok(result);
     }
 
     [HttpGet("great-grandfather-for/{greatGrandsonId:int}")]
     public async Task<IActionResult> GetGreatGrandfather([FromRoute] int greatGrandsonId)
     {
-        var result = await service.GetGreatGrandfather(greatGrandsonId);
+        var result = await service.GetGreatGrandfatherAsync(greatGrandsonId);
         
         if (result == null)
         {
@@ -48,7 +48,7 @@ public class FamilyTreeController(IFamilyTreeService service) : ControllerBase
     [HttpGet("grandfather-for/{grandsonId:int}")]
     public async Task<IActionResult> GetGrandfather([FromRoute] int grandsonId)
     {
-        var result = await service.GetGrandfather(grandsonId);
+        var result = await service.GetGrandfatherAsync(grandsonId);
         
         if (result == null)
         {
@@ -61,7 +61,7 @@ public class FamilyTreeController(IFamilyTreeService service) : ControllerBase
     [HttpGet("great-grandsons-for/{greatGrandfatherId:int}")]
     public async Task<IActionResult> GetGreatGrandsons([FromRoute] int greatGrandfatherId)
     {
-        var result = await service.GetGreatGrandsons(greatGrandfatherId);
+        var result = await service.GetGreatGrandsonsAsync(greatGrandfatherId);
 
         if (!result.Any())
         {

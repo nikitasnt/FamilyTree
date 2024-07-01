@@ -1,5 +1,8 @@
 ﻿namespace FamilyTree.Models;
 
+/// <summary>
+/// Output data about a family member.
+/// </summary>
 public class FamilyMemberInfo
 {
     public int Id { get; set; }

@@ -84,7 +84,7 @@ public class FamilyTreeService(FamilyTreeDbContext context) : IFamilyTreeService
         });
     }
 
-    public async Task<IEnumerable<FamilyMemberWithChildrenInfo>> GetAllMembers()
+    public async Task<IEnumerable<FamilyMemberWithChildrenInfo>> GetAllMembersAsync()
     {
         var allMembers = await context.FamilyMembers
             .AsNoTracking()
@@ -105,7 +105,7 @@ public class FamilyTreeService(FamilyTreeDbContext context) : IFamilyTreeService
         return ConvertAllMembers(allMembers);
     }
 
-    public async Task<FamilyMemberInfo?> GetGreatGrandfather(int greatGrandsonId)
+    public async Task<FamilyMemberInfo?> GetGreatGrandfatherAsync(int greatGrandsonId)
     {
         return await context.FamilyMembers
             .Where(m => m.HierarchyPath ==
@@ -122,7 +122,7 @@ public class FamilyTreeService(FamilyTreeDbContext context) : IFamilyTreeService
             .SingleOrDefaultAsync();
     }
 
-    public async Task<FamilyMemberInfo?> GetGrandfather(int grandsonId)
+    public async Task<FamilyMemberInfo?> GetGrandfatherAsync(int grandsonId)
     {
         return await context.FamilyMembers
             .AsNoTracking()
@@ -140,7 +140,7 @@ public class FamilyTreeService(FamilyTreeDbContext context) : IFamilyTreeService
             .SingleOrDefaultAsync();
     }
 
-    public async Task<IEnumerable<FamilyMemberInfo>> GetGreatGrandsons(int greatGrandfatherId)
+    public async Task<IEnumerable<FamilyMemberInfo>> GetGreatGrandsonsAsync(int greatGrandfatherId)
     {
         return await context.FamilyMembers
             .AsNoTracking()

@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace FamilyTree.Filters;
 
+/// <summary>
+/// Exception filter <see cref="BadHttpRequestException"/>. Write the exception message to the response body.
+/// </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class BadHttpRequestExceptionFilterAttribute : Attribute, IExceptionFilter
 {
